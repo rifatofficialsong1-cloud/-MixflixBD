@@ -6,35 +6,16 @@
     <title>MixFlix BD</title>
     <style>
         * { box-sizing: border-box; }
-        body { background: #000; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        body { background: #000; color: #fff; font-family: Arial, sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* Hero Banner */
-        .hero-banner { 
-            width: 100%; 
-            height: 250px; 
-            background: url('https://i.ibb.co.com/jX5F3MT/file-000000004d3471f88ff72a6cd04f0cf2.png'); 
-            background-size: cover; 
-            background-position: center; 
-        }
-
-        /* Sticky Navigation */
-        .nav-scroll { 
-            display: flex; 
-            overflow-x: auto; 
-            padding: 15px 10px; 
-            gap: 20px; 
-            scrollbar-width: none; 
-            background: #000; 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            border-bottom: 1px solid #222; 
-        }
+        /* Banner & Nav (আগের মতই থাকবে) */
+        .hero-banner { width: 100%; height: 250px; background: url('https://i.ibb.co.com/jX5F3MT/file-000000004d3471f88ff72a6cd04f0cf2.png'); background-size: cover; background-position: center; }
+        .nav-scroll { display: flex; overflow-x: auto; padding: 15px 10px; gap: 20px; scrollbar-width: none; background: #000; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #222; }
         .nav-scroll::-webkit-scrollbar { display: none; }
         .nav-item { white-space: nowrap; cursor: pointer; color: #808080; font-size: 13px; font-weight: 700; text-transform: uppercase; }
         .nav-item.active { color: #fff; border-bottom: 3px solid #e50914; padding-bottom: 5px; }
 
-        /* Movie Grid */
+        /* Grid */
         .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; }
         .movie-card { background: #1a1a1a; border-radius: 6px; overflow: hidden; border: 1px solid #333; }
         .movie-card img { width: 100%; height: 230px; object-fit: cover; }
@@ -42,17 +23,19 @@
         .movie-title { font-size: 13px; margin: 0 0 8px 0; height: 32px; overflow: hidden; color: #e5e5e5; }
         .watch-btn { display: block; background: #e50914; color: #fff; text-decoration: none; text-align: center; padding: 10px; font-size: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; }
 
-        /* Video Modal */
-        #video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { width: 100%; max-width: 800px; position: relative; padding: 10px; }
-        iframe { width: 100%; aspect-ratio: 16/9; border: none; border-radius: 4px; }
-        .close-btn { position: absolute; top: -50px; right: 15px; color: #fff; font-size: 40px; cursor: pointer; }
+        /* Full Screen Video Modal */
+        #video-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
+        .modal-content { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        
+        /* YouTube Player Iframe */
+        iframe { width: 100%; height: 60vh; border: none; } /* Mobile default Landscape view */
+        
+        .close-btn { position: absolute; top: 20px; right: 20px; color: #fff; font-size: 35px; cursor: pointer; z-index: 10001; background: rgba(0,0,0,0.5); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
 
 <div class="hero-banner"></div>
-
 <div class="nav-scroll" id="cat-nav">
     <div class="nav-item active" onclick="filterCat('All')">All</div>
     <div class="nav-item" onclick="filterCat('Japanese')">Japanese</div>
@@ -65,27 +48,18 @@
 <div class="movie-grid" id="movie-display"></div>
 
 <div id="video-modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closePlayer()">&times;</span>
-        <div id="player-container"></div>
-    </div>
+    <span class="close-btn" onclick="closePlayer()">&times;</span>
+    <div class="modal-content" id="player-container"></div>
 </div>
 
 <script>
     let allMovies = [];
-
-    fetch('movies.json')
-    .then(res => res.json())
-    .then(data => {
-        allMovies = data;
-        renderMovies('All');
-    });
+    fetch('movies.json').then(res => res.json()).then(data => { allMovies = data; renderMovies('All'); });
 
     function renderMovies(category) {
         const container = document.getElementById('movie-display');
         container.innerHTML = '';
         let filtered = (category === 'All') ? allMovies : allMovies.filter(m => m.category.includes(category));
-
         filtered.forEach(movie => {
             let vId = movie.video_url.split('v=')[1] || movie.video_url.split('/').pop().split('?')[0];
             container.innerHTML += `
@@ -102,16 +76,24 @@
     function openPlayer(id) {
         const modal = document.getElementById('video-modal');
         const container = document.getElementById('player-container');
-        // autoplay=1 and mute=1 added for direct play
-        container.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&rel=0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        // Autoplay=1 added. If you want sound, remove mute=1 but then autoplay might fail in some phones.
+        container.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&showinfo=0&fs=1" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" 
                                 allowfullscreen></iframe>`;
         modal.style.display = 'flex';
+        
+        // Try to force landscape on some devices
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(() => {});
+        }
     }
 
     function closePlayer() {
         document.getElementById('video-modal').style.display = 'none';
         document.getElementById('player-container').innerHTML = '';
+        if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+        }
     }
 
     function filterCat(cat) {
