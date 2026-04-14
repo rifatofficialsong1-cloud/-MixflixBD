@@ -1,32 +1,38 @@
 [
   {
-    "title": "Example Movie 1",
-    "thumbnail": "IMG_DIRECT_LINK_HERE",
-    "video_url": "YOUTUBE_LINK_HERE",
-    "category": "Japanese Movies"
-  },
-  {
-    "title": "Example Movie 2",
-    "thumbnail": "IMG_DIRECT_LINK_HERE",
-    "video_url": "YOUTUBE_LINK_HERE",
-    "category": "Indonesian Horror"
-  },
-  {
-    "title": "Example Movie 3",
-    "thumbnail": "IMG_DIRECT_LINK_HERE",
-    "video_url": "YOUTUBE_LINK_HERE",
-    "category": "Korean Drama"
-  },
-  {
-    "title": "Example Movie 4",
-    "thumbnail": "IMG_DIRECT_LINK_HERE",
-    "video_url": "YOUTUBE_LINK_HERE",
+    "title": "Action Thriller Movie",
+    "thumbnail": "https://i.ibb.co.com/tMBzyTpT/1775807206081.png",
+    "video_url": "https://youtu.be/BSAWoEw-zmQ",
     "category": "Action"
   },
   {
-    "title": "Example Movie 5",
-    "thumbnail": "IMG_DIRECT_LINK_HERE",
-    "video_url": "YOUTUBE_LINK_HERE",
+    "title": "Mystery Japanese Drama",
+    "thumbnail": "https://i.ibb.co.com/tMBzyTpT/1775807206081.png",
+    "video_url": "https://youtu.be/S-skiVLBFpk",
+    "category": "Japanese"
+  },
+  {
+    "title": "Indonesian Horror Night",
+    "thumbnail": "https://i.ibb.co.com/tMBzyTpT/1775807206081.png",
+    "video_url": "https://youtu.be/oK-byje_QWg",
+    "category": "Indonesian"
+  },
+  {
+    "title": "Romantic Special Story",
+    "thumbnail": "https://i.ibb.co.com/tMBzyTpT/1775807206081.png",
+    "video_url": "https://youtu.be/D72K-LXzF54",
     "category": "Romantic"
+  },
+  {
+    "title": "Super Action Movie",
+    "thumbnail": "https://i.ibb.co.com/tMBzyTpT/1775807206081.png",
+    "video_url": "https://youtu.be/2rdUVHhN8Eo",
+    "category": "Action"
+  },
+  {
+    "title": "Japanese Ghost Story",
+    "thumbnail": "https://i.ibb.co.com/tMBzyTpT/1775807206081.png",
+    "video_url": "https://youtu.be/rY4g1i5dPLQ",
+    "category": "Japanese"
   }
 ]
