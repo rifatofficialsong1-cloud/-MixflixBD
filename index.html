@@ -6,42 +6,59 @@
     <title>MixFlix BD</title>
     <style>
         * { box-sizing: border-box; }
-        body { background: #000; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+        body { background: #000; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* Header Section */
-        header { display: flex; align-items: center; padding: 15px; position: sticky; top: 0; background: rgba(0,0,0,0.9); z-index: 1000; }
-        .logo-box { display: flex; align-items: center; }
-        .logo-img { width: 45px; height: 45px; object-fit: contain; border-radius: 5px; }
-        .brand-name { margin-left: 10px; color: #e50914; font-size: 22px; font-weight: bold; letter-spacing: 1px; }
+        /* Hero Banner Section */
+        .hero-banner { 
+            width: 100%; 
+            height: 250px; 
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,1)), url('https://i.ibb.co.com/jX5F3MT/file-000000004d3471f88ff72a6cd04f0cf2.png'); 
+            background-size: cover; 
+            background-position: center; 
+            position: relative;
+        }
 
-        /* Banner Style */
-        .hero-banner { width: 100%; height: 200px; background: linear-gradient(to bottom, transparent, #000), url('https://i.ibb.co.com/tMBzyTpT/1775807206081.png'); background-size: cover; background-position: center; margin-bottom: 20px; }
+        /* Logo on top of Banner */
+        .header-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+        .logo-img { width: 40px; height: 40px; border-radius: 5px; object-fit: contain; }
+        .brand-name { margin-left: 10px; color: #e50914; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
 
-        /* Category Nav */
-        .nav-scroll { display: flex; overflow-x: auto; padding: 10px; gap: 15px; scrollbar-width: none; border-bottom: 1px solid #333; }
+        /* Category Menu */
+        .nav-scroll { display: flex; overflow-x: auto; padding: 15px 10px; gap: 20px; scrollbar-width: none; background: #000; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #222; }
         .nav-scroll::-webkit-scrollbar { display: none; }
-        .nav-item { white-space: nowrap; cursor: pointer; color: #aaa; font-size: 14px; font-weight: bold; text-transform: uppercase; }
-        .nav-item.active { color: #fff; border-bottom: 2px solid #e50914; padding-bottom: 5px; }
+        .nav-item { white-space: nowrap; cursor: pointer; color: #808080; font-size: 14px; font-weight: 600; transition: 0.3s; }
+        .nav-item.active { color: #fff; border-bottom: 3px solid #e50914; padding-bottom: 5px; }
 
-        /* Movie Grid */
-        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; }
-        .movie-card { background: #141414; border-radius: 4px; overflow: hidden; transition: transform 0.2s; }
-        .movie-card img { width: 100%; height: 220px; object-fit: cover; }
-        .movie-info { padding: 8px; }
-        .movie-title { font-size: 13px; margin: 0; height: 35px; overflow: hidden; color: #fff; }
-        .watch-btn { display: block; background: #e50914; color: #fff; text-decoration: none; text-align: center; padding: 8px; font-size: 12px; font-weight: bold; margin-top: 5px; border-radius: 2px; }
+        /* Grid System */
+        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
+        .movie-card { background: #1a1a1a; border-radius: 6px; overflow: hidden; position: relative; border: 1px solid #333; }
+        .movie-card img { width: 100%; height: 230px; object-fit: cover; display: block; }
+        .movie-info { padding: 10px; }
+        .movie-title { font-size: 13px; margin: 0 0 8px 0; height: 32px; overflow: hidden; font-weight: 500; color: #e5e5e5; }
+        .watch-btn { display: block; background: #e50914; color: #fff; text-decoration: none; text-align: center; padding: 10px; font-size: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+
+        /* Video Player Modal */
+        #video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { width: 95%; position: relative; }
+        iframe { width: 100%; aspect-ratio: 16/9; border: none; border-radius: 8px; }
+        .close-btn { position: absolute; top: -45px; right: 0; color: #fff; font-size: 35px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo-box">
+<div class="hero-banner">
+    <div class="header-overlay">
         <img src="https://i.ibb.co.com/tMBzyTpT/1775807206081.png" class="logo-img">
         <span class="brand-name">MixFlix BD</span>
     </div>
-</header>
-
-<div class="hero-banner"></div>
+</div>
 
 <div class="nav-scroll" id="cat-nav">
     <div class="nav-item active" onclick="filterCat('All')">All</div>
@@ -52,6 +69,13 @@
 </div>
 
 <div class="movie-grid" id="movie-display"></div>
+
+<div id="video-modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closePlayer()">&times;</span>
+        <div id="player-container"></div>
+    </div>
+</div>
 
 <script>
     let allMovies = [];
@@ -66,28 +90,36 @@
     function renderMovies(category) {
         const container = document.getElementById('movie-display');
         container.innerHTML = '';
-        
         let filtered = (category === 'All') ? allMovies : allMovies.filter(m => m.category.includes(category));
 
         filtered.forEach(movie => {
             let vId = movie.video_url.split('v=')[1] || movie.video_url.split('/').pop().split('?')[0];
-            let embedUrl = `https://www.youtube.com/embed/${vId}`;
-            
             container.innerHTML += `
                 <div class="movie-card">
-                    <img src="${movie.thumbnail}">
+                    <img src="${movie.thumbnail}" alt="Poster">
                     <div class="movie-info">
                         <p class="movie-title">${movie.title}</p>
-                        <a href="${embedUrl}" class="watch-btn">WATCH NOW</a>
+                        <div class="watch-btn" onclick="openPlayer('${vId}')">WATCH NOW</div>
                     </div>
                 </div>`;
         });
     }
 
+    function openPlayer(id) {
+        const modal = document.getElementById('video-modal');
+        const container = document.getElementById('player-container');
+        container.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1" allowfullscreen></iframe>`;
+        modal.style.display = 'flex';
+    }
+
+    function closePlayer() {
+        document.getElementById('video-modal').style.display = 'none';
+        document.getElementById('player-container').innerHTML = '';
+    }
+
     function filterCat(cat) {
-        // Active class toggle
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        event.target.classList.add('active');
+        event.currentTarget.classList.add('active');
         renderMovies(cat);
     }
 </script>
