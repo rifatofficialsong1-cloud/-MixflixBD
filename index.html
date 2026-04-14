@@ -8,43 +8,42 @@
         * { box-sizing: border-box; }
         body { background: #000; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* Hero Banner Section */
+        /* Hero Banner - No Dark Overlay for clarity */
         .hero-banner { 
             width: 100%; 
             height: 250px; 
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,1)), url('https://i.ibb.co.com/jX5F3MT/file-000000004d3471f88ff72a6cd04f0cf2.png'); 
-            background-size: cover; 
+            background: url('https://i.ibb.co.com/jX5F3MT/file-000000004d3471f88ff72a6cd04f0cf2.png'); 
+            background-size: 100% 100%; /* Image full show */
             background-position: center; 
-            position: relative;
+            margin-bottom: 0;
         }
 
-        /* Logo on top of Banner */
-        .header-overlay {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            display: flex;
-            align-items: center;
-            z-index: 10;
+        /* Sticky Category Menu */
+        .nav-scroll { 
+            display: flex; 
+            overflow-x: auto; 
+            padding: 15px 10px; 
+            gap: 20px; 
+            scrollbar-width: none; 
+            background: #000; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            border-bottom: 1px solid #222; 
         }
-        .logo-img { width: 40px; height: 40px; border-radius: 5px; object-fit: contain; }
-        .brand-name { margin-left: 10px; color: #e50914; font-size: 22px; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
-
-        /* Category Menu */
-        .nav-scroll { display: flex; overflow-x: auto; padding: 15px 10px; gap: 20px; scrollbar-width: none; background: #000; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #222; }
         .nav-scroll::-webkit-scrollbar { display: none; }
-        .nav-item { white-space: nowrap; cursor: pointer; color: #808080; font-size: 14px; font-weight: 600; transition: 0.3s; }
+        .nav-item { white-space: nowrap; cursor: pointer; color: #808080; font-size: 13px; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
         .nav-item.active { color: #fff; border-bottom: 3px solid #e50914; padding-bottom: 5px; }
 
-        /* Grid System */
-        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 12px; }
-        .movie-card { background: #1a1a1a; border-radius: 6px; overflow: hidden; position: relative; border: 1px solid #333; }
+        /* Movie Grid */
+        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; }
+        .movie-card { background: #1a1a1a; border-radius: 6px; overflow: hidden; border: 1px solid #333; }
         .movie-card img { width: 100%; height: 230px; object-fit: cover; display: block; }
         .movie-info { padding: 10px; }
-        .movie-title { font-size: 13px; margin: 0 0 8px 0; height: 32px; overflow: hidden; font-weight: 500; color: #e5e5e5; }
-        .watch-btn { display: block; background: #e50914; color: #fff; text-decoration: none; text-align: center; padding: 10px; font-size: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        .movie-title { font-size: 13px; margin: 0 0 8px 0; height: 32px; overflow: hidden; font-weight: 500; color: #e5e5e5; text-align: left; }
+        .watch-btn { display: block; background: #e50914; color: #fff; text-decoration: none; text-align: center; padding: 10px; font-size: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
-        /* Video Player Modal */
+        /* Video Modal */
         #video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { width: 95%; position: relative; }
         iframe { width: 100%; aspect-ratio: 16/9; border: none; border-radius: 8px; }
@@ -53,17 +52,13 @@
 </head>
 <body>
 
-<div class="hero-banner">
-    <div class="header-overlay">
-        <img src="https://i.ibb.co.com/tMBzyTpT/1775807206081.png" class="logo-img">
-        <span class="brand-name">MixFlix BD</span>
-    </div>
-</div>
+<div class="hero-banner"></div>
 
 <div class="nav-scroll" id="cat-nav">
     <div class="nav-item active" onclick="filterCat('All')">All</div>
     <div class="nav-item" onclick="filterCat('Japanese')">Japanese</div>
     <div class="nav-item" onclick="filterCat('Indonesian')">Indonesian</div>
+    <div class="nav-item" onclick="filterCat('Korean')">Korean Drama</div>
     <div class="nav-item" onclick="filterCat('Action')">Action</div>
     <div class="nav-item" onclick="filterCat('Romantic')">Romantic</div>
 </div>
