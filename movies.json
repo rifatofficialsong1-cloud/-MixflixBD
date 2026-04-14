@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Example Movie 1",
+    "thumbnail": "IMG_DIRECT_LINK_HERE",
+    "video_url": "YOUTUBE_LINK_HERE",
+    "category": "Japanese Movies"
+  },
+  {
+    "title": "Example Movie 2",
+    "thumbnail": "IMG_DIRECT_LINK_HERE",
+    "video_url": "YOUTUBE_LINK_HERE",
+    "category": "Indonesian Horror"
+  },
+  {
+    "title": "Example Movie 3",
+    "thumbnail": "IMG_DIRECT_LINK_HERE",
+    "video_url": "YOUTUBE_LINK_HERE",
+    "category": "Korean Drama"
+  },
+  {
+    "title": "Example Movie 4",
+    "thumbnail": "IMG_DIRECT_LINK_HERE",
+    "video_url": "YOUTUBE_LINK_HERE",
+    "category": "Action"
+  },
+  {
+    "title": "Example Movie 5",
+    "thumbnail": "IMG_DIRECT_LINK_HERE",
+    "video_url": "YOUTUBE_LINK_HERE",
+    "category": "Romantic"
+  }
+]
