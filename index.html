@@ -6,9 +6,9 @@
     <title>MixFlix BD</title>
     <style>
         * { box-sizing: border-box; }
-        body { background: #000; color: #fff; font-family: Arial, sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        body { background: #000; color: #fff; font-family: Arial, sans-serif; margin: 0; padding: 0; }
         
-        /* Banner & Nav (আগের মতই থাকবে) */
+        /* Banner & Nav */
         .hero-banner { width: 100%; height: 220px; background: url('https://i.ibb.co.com/jX5F3MT/file-000000004d3471f88ff72a6cd04f0cf2.png'); background-size: cover; background-position: center; }
         .nav-scroll { display: flex; overflow-x: auto; padding: 15px 10px; gap: 20px; scrollbar-width: none; background: #000; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #222; }
         .nav-scroll::-webkit-scrollbar { display: none; }
@@ -23,58 +23,26 @@
         .movie-title { font-size: 13px; margin: 0 0 8px 0; height: 32px; overflow: hidden; color: #e5e5e5; }
         .watch-btn { display: block; background: #e50914; color: #fff; text-decoration: none; text-align: center; padding: 10px; font-size: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; }
 
-        /* Force Landscape Video Modal */
+        /* Standard Video Modal (No Rotation) */
         #video-modal { 
             display: none; 
             position: fixed; 
             top: 0; left: 0; 
-            width: 100vw; height: 100vh; 
+            width: 100%; height: 100%; 
             background: #000; 
             z-index: 9999; 
-            overflow: hidden;
+            flex-direction: column;
+            justify-content: center;
         }
         
-        /* Rotating the content for full landscape view on portrait phone */
-        .modal-content { 
-            width: 100%; height: 100%; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-        }
-
-        /* Landscape rotation for mobile (portrait view to landscape) */
-        @media screen and (orientation: portrait) {
-            .modal-content {
-                transform: rotate(90deg);
-                width: 100vh;
-                height: 100vw;
-            }
-        }
-
-        iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: none; 
-        }
+        .modal-content { width: 100%; aspect-ratio: 16/9; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
         
         .close-btn { 
             position: absolute; 
-            top: 10px; right: 10px; 
-            color: #fff; font-size: 30px; 
-            cursor: pointer; z-index: 10001; 
-            background: rgba(229, 9, 20, 0.8); 
-            width: 40px; height: 40px; 
-            border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; 
-        }
-        
-        /* Adjustment for close button when rotated */
-        @media screen and (orientation: portrait) {
-            .close-btn {
-                top: auto;
-                bottom: 10px;
-                right: 10px;
-            }
+            top: -50px; right: 10px; 
+            color: #fff; font-size: 35px; 
+            cursor: pointer; 
         }
     </style>
 </head>
@@ -93,8 +61,10 @@
 <div class="movie-grid" id="movie-display"></div>
 
 <div id="video-modal">
-    <span class="close-btn" onclick="closePlayer()">&times;</span>
-    <div class="modal-content" id="player-container"></div>
+    <div class="modal-content">
+        <span class="close-btn" onclick="closePlayer()">&times;</span>
+        <div id="player-container" style="width: 100%; height: 100%;"></div>
+    </div>
 </div>
 
 <script>
@@ -122,28 +92,14 @@
         const modal = document.getElementById('video-modal');
         const container = document.getElementById('player-container');
         
-        // embed code with direct autoplay and mute removed for sound
-        container.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&fs=1&modestbranding=1" 
+        // standard YouTube embed with full permissions
+        container.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                 allowfullscreen></iframe>`;
         modal.style.display = 'flex';
-
-        // Attempt browser native fullscreen
-        if (modal.requestFullscreen) {
-            modal.requestFullscreen();
-        } else if (modal.webkitRequestFullscreen) {
-            modal.webkitRequestFullscreen();
-        } else if (modal.msRequestFullscreen) {
-            modal.msRequestFullscreen();
-        }
     }
 
     function closePlayer() {
-        if (document.exitFullscreen) {
-            document.exitFullscreen().catch(() => {});
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        }
         document.getElementById('video-modal').style.display = 'none';
         document.getElementById('player-container').innerHTML = '';
     }
